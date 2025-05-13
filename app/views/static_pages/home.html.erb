@@ -1,0 +1,29 @@
+<h1>Pexels API</h1>
+
+<%= form_with url: root_path, method: "GET" do |f| %>
+
+    <div>
+        <%= f.label :collection_id, "Collection ID: " %>
+        <%= f.text_field :collection_id %>
+    </div>
+
+    <div>
+        <%= f.submit "Search Collections" %>
+    </div>
+
+<% end %>
+
+<% if params[:collection_id] %>
+    <% if @searched_collection %>
+        <% @client.collections["#{@collection_id}", type: 'photos'].media.each do |media| %>
+            <%= image_tag media.src["medium"] if media.type == 'Photo' %>
+        <% end %>
+        <% @client.collections["#{@collection_id}", type: 'videos'].media.each do |media| %>
+            <%= video_tag media.files[0].link, controls: true %>
+        <% end %>
+    <% else %>
+        <p>No collection found, try a different collection id.</p>
+    <% end %>
+<% else %>
+    <p>Search for a collection by id to view its media</p>
+<% end %>
